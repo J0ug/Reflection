@@ -16,7 +16,7 @@ public class Injector {
     private final Properties properties;
 
     /**
-     *Создает новый экземпляр Injectable и загружает конфигурацию.
+     * Создает новый экземпляр Injectable и загружает конфигурацию.
      *
      * @param propertiesFilePath путь к файлу конфигурации
      * @throws IOException если файл конфигурации не найден или не может быть прочитан.
@@ -32,8 +32,8 @@ public class Injector {
      * Внедряет зависимости в объект, используя аннотацию {@link AutoInjectable}
      *
      * @param object объект, в который необходимо внедрить зависимость
+     * @param <T>    тип объекта
      * @return объект с внедренными зависимостями.
-     * @param <T> тип объекта
      * @throws RuntimeException если возникают ошибки при создании экземпляров или установке значений
      */
     public <T> T inject(T object) {
@@ -44,16 +44,19 @@ public class Injector {
                 String interfaceName = field.getType().getName();
                 String implClassName = properties.getProperty(interfaceName);
 
-                if (implClassName != null) {
-                    try {
-                        Class<?> implClass = Class.forName(implClassName);
-                        Object implInstance = implClass.getDeclaredConstructor().newInstance();
+                if (implClassName == null) {
+                    // Если реализация не найдена, выбрасываем исключение
+                    throw new RuntimeException("No implementation found for interface: " + interfaceName);
+                }
 
-                        field.setAccessible(true);
-                        field.set(object, implInstance);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error injecting field: " + field.getName(), e);
-                    }
+                try {
+                    Class<?> implClass = Class.forName(implClassName);
+                    Object implInstance = implClass.getDeclaredConstructor().newInstance();
+
+                    field.setAccessible(true);
+                    field.set(object, implInstance);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error injecting field: " + field.getName(), e);
                 }
             }
         }
@@ -61,3 +64,4 @@ public class Injector {
         return object;
     }
 }
+
