@@ -1,5 +1,9 @@
 package org.example;
 
+/**
+ * Главный класс для запуска приложения.
+ * Демонстрирует использование {@link Injector} для автоматического внедрения зависимостей
+ */
 public class Main {
     public static void main(String[] args) {
         try {

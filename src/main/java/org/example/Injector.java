@@ -5,10 +5,22 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
+/**
+ *Класс для автоматического внедрения зависимостей.
+ * Использует аннотацию {@link AutoInjectable} для поиска полей,
+ * которые необходимо инициализировать, и инициализирует их с использованием
+ * конфигурации из файла properties.
+ */
 public class Injector {
 
     private final Properties properties;
 
+    /**
+     *Создает новый экземпляр Injectable и загружает конфигурацию.
+     *
+     * @param propertiesFilePath путь к файлу конфигурации
+     * @throws IOException если файл конфигурации не найден или не может быть прочитан.
+     */
     public Injector(String propertiesFilePath) throws IOException {
         properties = new Properties();
         try (FileInputStream fis = new FileInputStream(propertiesFilePath)) {
@@ -16,6 +28,14 @@ public class Injector {
         }
     }
 
+    /**
+     * Внедряет зависимости в объект, используя аннотацию {@link AutoInjectable}
+     *
+     * @param object объект, в который необходимо внедрить зависимость
+     * @return объект с внедренными зависимостями.
+     * @param <T> тип объекта
+     * @throws RuntimeException если возникают ошибки при создании экземпляров или установке значений
+     */
     public <T> T inject(T object) {
         Class<?> clazz = object.getClass();
 

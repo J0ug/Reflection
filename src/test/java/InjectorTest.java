@@ -4,8 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+/**
+ *
+ */
 public class InjectorTest {
-
+    /**
+     *
+     * @throws Exception
+     */
     @Test
     void testOrderServiceInjection() throws Exception {
         Injector injector = new Injector("src/main/resources/config.properties");
